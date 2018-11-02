@@ -2,7 +2,7 @@ const path = require("path");
 
 module.exports = {
   context: __dirname,
-  entry: "./frontend/entry.js",
+  entry: "./entry.js",
   output: {
     path: path.resolve(__dirname),
     filename: "bundle.js"
@@ -26,7 +26,7 @@ module.exports = {
     ]
   },
   devServer: {
-    contentBase: path.resolve(__dirname + "/frontend/public"),
+    contentBase: path.resolve(__dirname + "/public"),
     port: 3000
   },
   devtool: "source-map",

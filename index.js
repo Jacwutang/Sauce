@@ -20,7 +20,6 @@ app.get("/api/health-check/", (request, response) => {
   } else {
     console.log("mag process paused");
 
-    // python_process.childProcess.kill("SIGINT");
     // clear Interval
     clearInterval(intervalId);
   }

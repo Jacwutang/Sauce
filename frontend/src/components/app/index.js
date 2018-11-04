@@ -14,26 +14,32 @@ class App extends Component {
         Failure: 0,
         Other: 0
       },
+      counter: 0,
       showLogs: false
     };
     this.handleClick = this.handleClick.bind(this);
     this.toggleLogs = this.toggleLogs.bind(this);
-    this.intervalId = null;
     this.endpoint = "/api/health-check";
-    this.failureCodes = [500];
     this.socket = socketIOClient("http://localhost:5000");
   }
 
   componentDidMount() {
-    this.socket.on("dataPoint", point =>
+    this.socket.on("dataPoint", point => {
+      let copyData = this.state.data.slice();
+      copyData[this.state.counter % 300] = point;
       this.setState({
-        data: this.state.data.concat(point),
-        category: this.helper(point.status)
-      })
-    );
+        data: copyData,
+        category: this.helper(point.status),
+        counter: (this.state.counter + 1) % 300
+      });
+    });
   }
 
-  reset() {}
+  componentWillUnmount() {
+    this.socket.close();
+    this.setState({ active: false });
+    this.togglePolling();
+  }
 
   helper(status) {
     //determine which category to place response
@@ -52,14 +58,8 @@ class App extends Component {
     return newObj;
   }
 
-  componentWillUnmount() {
-    this.socket.close();
-    this.setState({ active: false });
-    this.togglePolling();
-  }
-
   handleClick(e) {
-    console.log("clicked");
+    // console.log("clicked");
     e.preventDefault();
 
     this.togglePolling();
@@ -75,7 +75,9 @@ class App extends Component {
   toggleLogs() {
     return (
       <ul>
-        {this.state.data.slice(-10).map((point, idx) => (
+        <span> timestamp </span>
+        <span> status </span>
+        {this.state.data.map((point, idx) => (
           <li key={idx}>
             <span> {point.timestamp}</span>
             <span> {point.status} </span>
@@ -86,7 +88,9 @@ class App extends Component {
   }
 
   calculatePercentage(type) {
-    return Math.round(this.state.category[type] / this.state.data.length * 100);
+    return Math.round(
+      (this.state.category[type] / this.state.data.length) * 100
+    );
   }
 
   renderGraph() {
@@ -116,9 +120,10 @@ class App extends Component {
 
   render() {
     const { active, data, category } = this.state;
-    console.log(this.state);
+    // console.log(this.state);
     return (
       <div className="container">
+        <h1> Health Monitoring Service </h1>
         <div className="side-container">
           <button onClick={this.handleClick}>
             {" "}

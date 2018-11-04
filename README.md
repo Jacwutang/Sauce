@@ -15,13 +15,13 @@
 
 ### Features
 
-1) GUI for starting/stopping health check
-- Implemented using websockets, Node server pushes data at a one second interval
+#### 1) GUI for starting/stopping health check
+- Implemented using websockets, Node server pushes data at a one second interval at a much lower overhead cost than continous http polling
 - Used a charting library to graph / table continous data
 
 ![demo-one](http://g.recordit.co/7NY5hvDFIa.gif)
 
-2) Rolling data for the past 5 minutes
+#### 2) Rolling data for the past 5 minutes
 ![demo-two](http://g.recordit.co/2k0grwkw9D.gif)
 - Since data is updated approximately once per second, I used this approximation to store at most 300 ( 5 (minutes) * 60 seconds == 300 seconds) data points.
 ``` javascript
@@ -29,6 +29,7 @@ insertIndex =  counter % 300
 ```
 Once all 300 slots in the array are filled, the next entry will be at index 0. 
 
-
+#### 3) Testing
+- Still in progress. Ran into some issues with environment configuration
 
 

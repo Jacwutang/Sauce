@@ -27,6 +27,8 @@ app.get("/api/health-check/", (request, response) => {
   response.sendStatus(200);
 });
 
+app.get("/favicon.ico", (req, res) => res.status(204));
+
 const pollingHelper = () => {
   // Interval keep going
   // intervalId =

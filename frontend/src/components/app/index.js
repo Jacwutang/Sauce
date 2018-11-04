@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import "./index.css";
 import Table from "../table";
-import { LineChart, Line } from "recharts";
 import socketIOClient from "socket.io-client";
 import { PieChart } from "react-easy-chart";
 class App extends Component {

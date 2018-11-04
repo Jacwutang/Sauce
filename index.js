@@ -42,8 +42,17 @@ const pollingHelper = () => {
   });
 };
 
-//Serve static files
-app.use(express.static(path.join(__dirname, "/frontend/public")));
+//Serve static assets when pushed to heroku
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "/frontend/build")));
+} else {
+  app.use(express.static(path.join(__dirname, "./frontend/public")));
+}
+
+// app.get("*", (request, response) => {
+//   response.sendFile(path.join(__dirname, "/frontend/public/index.html"));
+// });
+// app.use(express.static(path.join(__dirname, "/frontend/public")));
 
 const port = process.env.PORT || 5000;
 server.listen(port, () => {

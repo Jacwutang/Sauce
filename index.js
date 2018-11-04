@@ -9,12 +9,12 @@ const { PythonShell } = require("python-shell");
 
 app.use(cors());
 
-// var python_process;
-var intervalId;
+socket.on("connection", io => null);
 
+var intervalId;
 app.get("/api/health-check/", (request, response) => {
   const { active } = request.query;
-
+  console.log("get request");
   if (active == "false") {
     intervalId = setInterval(pollingHelper, 3000);
   } else {
@@ -27,8 +27,6 @@ app.get("/api/health-check/", (request, response) => {
   response.sendStatus(200);
 });
 
-// socket.on("", () => {});
-
 const pollingHelper = () => {
   // Interval keep going
   // intervalId =
@@ -37,7 +35,7 @@ const pollingHelper = () => {
   request("http://127.0.0.1:12345", (error, response, body) => {
     //console.log(error, response.statusCode);
     //Emit statusCode, and timestamp to front-end
-    socket.emit("ping", response.statusCode);
+    socket.emit("dataPoint", response.statusCode);
   });
 };
 

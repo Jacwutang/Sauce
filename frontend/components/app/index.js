@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "./index.css";
-import ReactTable from "react-table";
+import Table from "../table";
 import { LineChart, Line } from "recharts";
 import socketIOClient from "socket.io-client";
 class App extends Component {
@@ -8,22 +8,54 @@ class App extends Component {
     super(props);
     this.state = {
       active: false,
-      data: []
+      data: [],
+      category: {
+        Success: 0,
+        Failure: 0,
+        Other: 0
+      }
     };
     this.handleClick = this.handleClick.bind(this);
     this.intervalId = null;
     this.endpoint = "/api/health-check";
     this.failureCodes = [500];
+    this.socket = socketIOClient("http://localhost:5000");
   }
 
   componentDidMount() {
-    const socket = socketIOClient("http://localhost:5000");
-    socket.on("ping", ping =>
-      this.setState({ data: this.state.data.concat(ping) })
+    this.socket.on("dataPoint", point =>
+      this.setState({
+        data: this.state.data.concat(point),
+        category: this.helper(point)
+      })
     );
   }
 
+  reset() {}
+
+  helper(point) {
+    //determine which category to place response
+
+    let ret;
+    let newObj;
+    if (point == 200) {
+      ret = "Success";
+    } else if (point == 500) {
+      ret = "Failure";
+    } else {
+      ret = "Other";
+    }
+    newObj = { ...this.state.category };
+    newObj[ret] += 1;
+    return newObj;
+  }
+
+  componentWillUnmount() {
+    this.socket.close();
+  }
+
   handleClick(e) {
+    console.log("clicked");
     e.preventDefault();
 
     this.togglePolling();
@@ -37,8 +69,8 @@ class App extends Component {
   }
 
   render() {
-    console.log(this.state.data);
-    const { active } = this.state;
+    const { active, data, category } = this.state;
+    console.log(this.state);
     return (
       <div className="container">
         <div className="side-container">
@@ -46,8 +78,9 @@ class App extends Component {
             {" "}
             {active == false ? "Start" : "Pause"} Health Check{" "}
           </button>
-          <button> Show Logs </button>
+          <button> Show Rolling Logs </button>
         </div>
+        <Table data={category} />
       </div>
     );
   }

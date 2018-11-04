@@ -25,6 +25,7 @@
     "react": "^16.6.0",
     "react-dom": "^16.6.0",
     "react-easy-chart": "^1.0.0",
+    "react-scripts": "^2.1.1",
     "socket.io-client": "^2.1.1"
   },
   "devDependencies": {
@@ -34,7 +35,6 @@
     "babel-loader": "^8.0.4",
     "css-loader": "^1.0.1",
     "jest": "^23.6.0",
-    "react-scripts": "^2.1.1",
     "style-loader": "^0.23.1"
   },
   "browserslist": [

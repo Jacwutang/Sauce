@@ -32,5 +32,6 @@ Once all 300 slots in the array are filled, the next entry will be at index 0.
 
 #### 3) Testing
 - Still in progress. Ran into some issues with environment configuration, and deployment
+- After cloning, ```cd frontend``` and ```npm run test```
 
 

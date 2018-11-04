@@ -3,6 +3,7 @@ import "./index.css";
 import Table from "../table";
 import { LineChart, Line } from "recharts";
 import socketIOClient from "socket.io-client";
+import { PieChart } from "react-easy-chart";
 class App extends Component {
   constructor(props) {
     super(props);
@@ -54,6 +55,8 @@ class App extends Component {
 
   componentWillUnmount() {
     this.socket.close();
+    this.setState({ active: false });
+    this.togglePolling();
   }
 
   handleClick(e) {
@@ -83,6 +86,35 @@ class App extends Component {
     );
   }
 
+  calculatePercentage(type) {
+    return Math.round(this.state.category[type] / this.state.data.length * 100);
+  }
+
+  renderGraph() {
+    return (
+      <PieChart
+        labels
+        data={[
+          {
+            key: `Success ${this.calculatePercentage("Success")}%`,
+            value: `${this.state.category["Success"]}`,
+            color: "#E38627"
+          },
+          {
+            key: `Failure ${this.calculatePercentage("Failure")}%`,
+            value: `${this.state.category["Failure"]}`,
+            color: "#C13C37"
+          },
+          {
+            key: `Other ${this.calculatePercentage("Other")}%`,
+            value: `${this.state.category["Other"]}`,
+            color: "#6A2135"
+          }
+        ]}
+      />
+    );
+  }
+
   render() {
     const { active, data, category } = this.state;
     console.log(this.state);
@@ -102,6 +134,8 @@ class App extends Component {
         </div>
         {this.state.showLogs ? this.toggleLogs() : null}
         <Table data={category} />
+
+        {this.state.data.length > 0 ? this.renderGraph() : null}
       </div>
     );
   }

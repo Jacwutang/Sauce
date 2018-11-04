@@ -27,3 +27,7 @@ button {
   justify-content: space-between;
   width: 100%;
 }
+
+ul {
+  border: 1px solid black;
+}

@@ -24,13 +24,21 @@ class App extends Component {
   }
 
   componentDidMount() {
+    const { data, counter } = this.state;
+
     this.socket.on("dataPoint", point => {
-      let copyData = this.state.data.slice();
-      copyData[this.state.counter % 300] = point;
+      let copyData = data.slice();
+      // Decrement category count if there is an existing data point in this index, since it is being overwritten with new info.
+      if (copyData[counter % 300] != undefined) {
+        this.helper(copyData[counter % 300], "subtract");
+      }
+
+      copyData[counter % 300] = point;
+
       this.setState({
         data: copyData,
-        category: this.helper(point.status),
-        counter: (this.state.counter + 1) % 300
+        category: this.helper(point.status, "add"),
+        counter: (counter + 1) % 300
       });
     });
   }
@@ -41,11 +49,9 @@ class App extends Component {
     this.togglePolling();
   }
 
-  helper(status) {
+  helper(status, operation) {
     //determine which category to place response
-
-    let ret;
-    let newObj;
+    let ret, newObj;
     if (status == 200) {
       ret = "Success";
     } else if (status == 500) {
@@ -54,12 +60,17 @@ class App extends Component {
       ret = "Other";
     }
     newObj = { ...this.state.category };
-    newObj[ret] += 1;
+
+    if (operation === "add") {
+      newObj[ret] += 1;
+    } else if (operation == "subtract") {
+      newObj[ret] -= 1;
+    }
+
     return newObj;
   }
 
   handleClick(e) {
-    // console.log("clicked");
     e.preventDefault();
 
     this.togglePolling();
@@ -68,7 +79,7 @@ class App extends Component {
   }
 
   togglePolling() {
-    // Start/Stop polling depending on current status
+    // Start or Stop polling depending on current status
     fetch(`http://localhost:5000${this.endpoint}/?active=${this.state.active}`);
   }
 
@@ -120,7 +131,6 @@ class App extends Component {
 
   render() {
     const { active, data, category } = this.state;
-    // console.log(this.state);
     return (
       <div className="container">
         <h1> Health Monitoring Service </h1>

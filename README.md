@@ -40,7 +40,8 @@ const pollingHelper = () => {
 insertIndex =  counter % 300
 counter = (counter + 1) % 300
 ```
-Once all 300 slots in the array are filled, the next entry will be at index 0. 
+Once all 300 slots in the array are filled, the next entry will be at index 0, and then 1,2,3,etc... Such that the oldest points get overwritten. 
+
 --------------------------------------------------------------
 
 #### 3) Testing

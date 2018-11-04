@@ -26,6 +26,7 @@
 - Since data is updated approximately once per second, I used this approximation to store at most 300 ( 5 (minutes) * 60 seconds == 300 seconds) data points.
 ``` javascript
 insertIndex =  counter % 300
+counter = (counter + 1) % 300
 ```
 Once all 300 slots in the array are filled, the next entry will be at index 0. 
 

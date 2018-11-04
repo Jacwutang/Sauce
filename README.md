@@ -31,6 +31,7 @@ const pollingHelper = () => {
 - Used a charting library to graph / table continous data
 
 ![demo-one](http://g.recordit.co/7NY5hvDFIa.gif)
+--------------------------------------------------------------
 
 #### 2) Rolling data for the past 5 minutes
 ![demo-two](http://g.recordit.co/2k0grwkw9D.gif)
@@ -40,7 +41,7 @@ insertIndex =  counter % 300
 counter = (counter + 1) % 300
 ```
 Once all 300 slots in the array are filled, the next entry will be at index 0. 
-
+--------------------------------------------------------------
 
 #### 3) Testing
 - Still in progress. Ran into some issues with environment configuration, and deployment

@@ -13,9 +13,11 @@ class App extends Component {
         Success: 0,
         Failure: 0,
         Other: 0
-      }
+      },
+      showLogs: false
     };
     this.handleClick = this.handleClick.bind(this);
+    this.toggleLogs = this.toggleLogs.bind(this);
     this.intervalId = null;
     this.endpoint = "/api/health-check";
     this.failureCodes = [500];
@@ -26,21 +28,21 @@ class App extends Component {
     this.socket.on("dataPoint", point =>
       this.setState({
         data: this.state.data.concat(point),
-        category: this.helper(point)
+        category: this.helper(point.status)
       })
     );
   }
 
   reset() {}
 
-  helper(point) {
+  helper(status) {
     //determine which category to place response
 
     let ret;
     let newObj;
-    if (point == 200) {
+    if (status == 200) {
       ret = "Success";
-    } else if (point == 500) {
+    } else if (status == 500) {
       ret = "Failure";
     } else {
       ret = "Other";
@@ -68,6 +70,19 @@ class App extends Component {
     fetch(`http://localhost:5000${this.endpoint}/?active=${this.state.active}`);
   }
 
+  toggleLogs() {
+    return (
+      <ul>
+        {this.state.data.slice(-10).map((point, idx) => (
+          <li key={idx}>
+            <span> {point.timestamp}</span>
+            <span> {point.status} </span>
+          </li>
+        ))}
+      </ul>
+    );
+  }
+
   render() {
     const { active, data, category } = this.state;
     console.log(this.state);
@@ -78,8 +93,14 @@ class App extends Component {
             {" "}
             {active == false ? "Start" : "Pause"} Health Check{" "}
           </button>
-          <button> Show Rolling Logs </button>
+          <button
+            onClick={() => this.setState({ showLogs: !this.state.showLogs })}
+          >
+            {" "}
+            Show Rolling Logs{" "}
+          </button>
         </div>
+        {this.state.showLogs ? this.toggleLogs() : null}
         <Table data={category} />
       </div>
     );

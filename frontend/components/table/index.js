@@ -4,8 +4,8 @@ const Table = props => (
   <table>
     <tbody>
       <tr>
-        <th> Success (500 response) </th>
-        <th> Failure (200 Response) </th>
+        <th> Success (200 response) </th>
+        <th> Failure (500 Response) </th>
         <th> Other </th>
       </tr>
       <tr>

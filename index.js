@@ -16,7 +16,7 @@ app.get("/api/health-check/", (request, response) => {
   const { active } = request.query;
   console.log("get request");
   if (active == "false") {
-    intervalId = setInterval(pollingHelper, 3000);
+    intervalId = setInterval(pollingHelper, 1000);
   } else {
     console.log("mag process paused");
 
@@ -35,7 +35,10 @@ const pollingHelper = () => {
   request("http://127.0.0.1:12345", (error, response, body) => {
     //console.log(error, response.statusCode);
     //Emit statusCode, and timestamp to front-end
-    socket.emit("dataPoint", response.statusCode);
+    socket.emit("dataPoint", {
+      timestamp: Date.now(),
+      status: response.statusCode
+    });
   });
 };
 

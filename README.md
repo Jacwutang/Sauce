@@ -3,6 +3,7 @@
 ## Prerequisites:
 1) NodeJS 10.x 
 2) Python 3.x
+3) Twisted module ```pip install Twisted ```
 
 ## Setup
 1) git clone {this repository}
